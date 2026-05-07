@@ -1,0 +1,506 @@
+/* ══════════════════════════════════════════════════════
+   ARAMIS — Admin Konfiguráció oldal
+   ══════════════════════════════════════════════════════ */
+
+:root {
+  --crimson:      #8B1010;
+  --crimson-glow: #C41E1E;
+  --bg:           #090909;
+  --bg-alt:       #0F0F0F;
+  --bg-card:      #141414;
+  --cream:        #F5EFE0;
+  --cream-dim:    #DDD6CC;
+  --gold:         #C9A84C;
+  --text-muted:   #7A7268;
+  --border:       rgba(139,16,16,.2);
+  --font-serif:   'Cormorant Garamond', Georgia, serif;
+  --font-sans:    'Montserrat', system-ui, sans-serif;
+  --c-new:        #C41E1E;
+  --c-preparing:  #C4821E;
+  --c-ready:      #2E8B57;
+  --c-delivered:  #4A4A4A;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--cream);
+  min-height: 100vh;
+}
+
+/* ══ FEJLÉC ══ */
+.ch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .75rem 2rem;
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.ch__left { display: flex; align-items: center; gap: .9rem; }
+.ch__logo {
+  height: 26px;
+  filter: brightness(0) invert(1);
+  opacity: .8;
+}
+.ch__title {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: var(--cream);
+  letter-spacing: .06em;
+}
+.ch__nav { display: flex; gap: .5rem; }
+.ch__nav-link {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .38rem .9rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text-muted);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color .2s, border-color .2s, background .2s;
+}
+.ch__nav-link:hover {
+  color: var(--cream);
+  border-color: rgba(255,255,255,.2);
+  background: rgba(255,255,255,.04);
+}
+
+/* ══ OLDAL LAYOUT ══ */
+.page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  padding: 1.5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+@media (max-width: 900px) {
+  .page { grid-template-columns: 1fr; }
+  .ch   { padding: .65rem 1rem; }
+  .page { padding: 1rem; }
+}
+
+.col { display: flex; flex-direction: column; gap: 1.2rem; }
+
+/* ══ KÁRTYA ══ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.card__title {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  font-family: var(--font-sans);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.card__title svg { color: var(--crimson-glow); flex-shrink: 0; }
+
+.card__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* ══ VEZÉRLŐ SOR ══ */
+.ctrl-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .9rem 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.ctrl-row:last-of-type { border-bottom: none; }
+.ctrl-row__info { display: flex; flex-direction: column; gap: .25rem; }
+.ctrl-row__label {
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--cream);
+}
+.ctrl-row__desc {
+  font-size: .7rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ══ BIG TOGGLE ══ */
+.big-toggle {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
+}
+.big-toggle__track {
+  width: 46px;
+  height: 26px;
+  border-radius: 13px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.12);
+  position: relative;
+  transition: background .3s, border-color .3s;
+  flex-shrink: 0;
+}
+.big-toggle__thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: transform .3s, background .3s;
+}
+.big-toggle__label {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  min-width: 38px;
+  transition: color .3s;
+}
+
+/* ON állapot */
+.big-toggle[data-on="true"] .big-toggle__track {
+  background: rgba(46,139,87,.25);
+  border-color: rgba(46,139,87,.5);
+}
+.big-toggle[data-on="true"] .big-toggle__thumb {
+  transform: translateX(20px);
+  background: var(--c-ready);
+}
+.big-toggle[data-on="true"] .big-toggle__label { color: var(--c-ready); }
+
+/* Mód toggle — teszt = narancs, éles = zöld */
+.big-toggle--mode[data-mode="test"] .big-toggle__track {
+  background: rgba(196,130,30,.2);
+  border-color: rgba(196,130,30,.4);
+}
+.big-toggle--mode[data-mode="test"] .big-toggle__thumb {
+  transform: translateX(20px);
+  background: var(--c-preparing);
+}
+.big-toggle--mode[data-mode="test"] .big-toggle__label { color: var(--c-preparing); }
+.big-toggle--mode[data-mode="live"] .big-toggle__track {
+  background: rgba(46,139,87,.2);
+  border-color: rgba(46,139,87,.4);
+}
+.big-toggle--mode[data-mode="live"] .big-toggle__thumb {
+  transform: translateX(20px);
+  background: var(--c-ready);
+}
+.big-toggle--mode[data-mode="live"] .big-toggle__label { color: var(--c-ready); }
+
+/* ══ ZÁRÁS ÜZENET ══ */
+.closure-msg {
+  background: rgba(196,30,30,.06);
+  border: 1px solid rgba(196,30,30,.2);
+  border-radius: 3px;
+  padding: .9rem;
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+.closure-msg__label {
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--c-new);
+}
+.closure-msg__input {
+  background: rgba(0,0,0,.3);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-size: .8rem;
+  padding: .55rem .75rem;
+  resize: none;
+  outline: none;
+  transition: border-color .2s;
+}
+.closure-msg__input:focus { border-color: var(--crimson-glow); }
+.closure-msg__save {
+  align-self: flex-end;
+  padding: .35rem .9rem;
+  background: var(--crimson-glow);
+  border: none;
+  border-radius: 2px;
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .2s;
+}
+.closure-msg__save:hover { background: #a01818; }
+
+/* ══ IDŐ BEÁLLÍTÁSOK ══ */
+.time-setting {
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.time-setting:last-child { border-bottom: none; padding-bottom: 0; }
+.time-setting__label {
+  font-size: .68rem;
+  font-weight: 600;
+  color: var(--cream-dim);
+}
+.time-setting__row {
+  display: flex;
+  gap: .6rem;
+  align-items: center;
+}
+.time-setting__select {
+  flex: 1;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-size: .8rem;
+  font-weight: 600;
+  padding: .45rem .75rem;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237A7268' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right .6rem center;
+  padding-right: 1.8rem;
+  transition: border-color .2s;
+}
+.time-setting__select:focus { border-color: var(--crimson-glow); }
+.time-setting__select option { background: #1a1a1a; }
+.time-setting__save {
+  padding: .45rem .9rem;
+  background: rgba(196,30,30,.12);
+  border: 1px solid rgba(196,30,30,.3);
+  border-radius: 2px;
+  color: var(--c-new);
+  font-family: var(--font-sans);
+  font-size: .63rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.time-setting__save:hover { background: rgba(196,30,30,.22); }
+.time-setting__save.saved {
+  background: rgba(46,139,87,.12);
+  border-color: rgba(46,139,87,.3);
+  color: var(--c-ready);
+}
+.time-setting__hint {
+  font-size: .66rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+/* ══ STATISZTIKA GRID ══ */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .7rem;
+}
+.stat-box {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: .9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+}
+.stat-box--gold .stat-box__num  { color: var(--gold); }
+.stat-box--green .stat-box__num { color: var(--c-ready); }
+.stat-box__num {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--cream);
+  line-height: 1;
+}
+.stat-box__label {
+  font-size: .6rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ══ TÍPUS MEGOSZLÁS ══ */
+.type-split {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.type-split__row {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+}
+.type-split__label {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+  font-size: .68rem;
+  color: var(--text-muted);
+  min-width: 90px;
+}
+.type-split__bar-wrap {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.type-split__bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width .6s ease;
+}
+.type-split__bar--delivery { background: var(--c-preparing); }
+.type-split__bar--pickup   { background: var(--c-ready); }
+.type-split__pct {
+  font-size: .68rem;
+  font-weight: 700;
+  color: var(--cream-dim);
+  min-width: 32px;
+  text-align: right;
+}
+
+/* ══ CSÚCSFORGALOM CHART ══ */
+.hour-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 80px;
+  padding-bottom: 0;
+}
+.hour-bar {
+  flex: 1;
+  border-radius: 2px 2px 0 0;
+  background: rgba(139,16,16,.35);
+  transition: height .5s ease, background .2s;
+  min-height: 3px;
+  position: relative;
+  cursor: default;
+}
+.hour-bar:hover { background: var(--crimson-glow); }
+.hour-bar__tip {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: .15rem .4rem;
+  font-size: .6rem;
+  font-weight: 700;
+  color: var(--cream);
+  white-space: nowrap;
+  display: none;
+  pointer-events: none;
+}
+.hour-bar:hover .hour-bar__tip { display: block; }
+
+.hour-chart__labels {
+  display: flex;
+  gap: 3px;
+  margin-top: .3rem;
+}
+.hour-label {
+  flex: 1;
+  text-align: center;
+  font-size: .48rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* ══ PERIOD TABS ══ */
+.period-tabs { display: flex; gap: .3rem; }
+.period-tab {
+  padding: .25rem .65rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.period-tab.active {
+  background: var(--crimson-glow);
+  border-color: var(--crimson-glow);
+  color: var(--cream);
+}
+.period-tab:hover:not(.active) { color: var(--cream-dim); }
+
+/* ══ TOAST ══ */
+.cfg-toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  z-index: 999;
+  background: #1a3a1a;
+  border: 1px solid #2d6a2d;
+  color: var(--cream);
+  padding: .7rem 1.4rem;
+  border-radius: 3px;
+  font-size: .8rem;
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s, transform .3s;
+  white-space: nowrap;
+}
+.cfg-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+::selection { background: var(--crimson); color: var(--cream); }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }

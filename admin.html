@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aramis — Konyhai Kijelző</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+  <!-- ═══ HEADER ═══ -->
+  <header class="ah">
+    <div class="ah__left">
+      <img src="images/logo R.png" alt="Aramis" class="ah__logo" />
+      <span class="ah__badge">KONYHAI KIJELZŐ</span>
+    </div>
+
+    <button class="ah__alert" id="newOrderAlert" aria-live="polite">
+      <span class="ah__alert-dot" id="alertDot"></span>
+      <span id="newOrderCount">0</span>&nbsp;ÚJ RENDELÉS
+    </button>
+
+    <div class="ah__right">
+      <time class="ah__clock" id="adminClock">00:00:00</time>
+      <div class="ah__status">
+        <span class="ah__status-dot" id="statusDot"></span>
+        <span id="statusText">Kapcsolódás…</span>
+      </div>
+      <button class="ah__icon-btn ah__sound-btn active" id="soundToggle" title="Hangjelzés be/ki">
+        <svg id="iconSoundOn" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+        </svg>
+        <svg id="iconSoundOff" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <line x1="23" y1="9" x2="17" y2="15"/>
+          <line x1="17" y1="9" x2="23" y2="15"/>
+        </svg>
+      </button>
+      <button class="ah__mode-badge" id="modeBadge" title="Mód váltása">Teszt</button>
+      <button class="ah__admin-btn" id="settingsToggle">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <line x1="3" y1="6"  x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+        Admin
+      </button>
+      <a href="index.html" class="ah__icon-btn" title="Vissza a főoldalra">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- ═══ BEÁLLÍTÁSOK PANEL ═══ -->
+  <div class="settings-overlay" id="settingsOverlay">
+    <div class="settings-panel">
+      <div class="sp__header">
+        <h3>Beállítások</h3>
+        <button class="ah__icon-btn" id="settingsClose" style="font-size:1.2rem">×</button>
+      </div>
+
+      <div class="sp__body">
+
+        <!-- Működési mód -->
+        <div class="sp__group">
+          <p class="sp__label">Működési mód</p>
+          <div class="sp__radio-row">
+            <label class="sp__radio">
+              <input type="radio" name="settingMode" value="test">
+              <span>🧪 Teszt mód</span>
+            </label>
+            <label class="sp__radio">
+              <input type="radio" name="settingMode" value="live" checked>
+              <span>🟢 Éles mód</span>
+            </label>
+          </div>
+          <small class="sp__hint">Teszt módban a rendelések „(TESZT)" felirattal jelennek meg</small>
+        </div>
+
+        <!-- Visszaigazolási idő -->
+        <div class="sp__group">
+          <p class="sp__label">Rendelés visszaigazolási idő</p>
+          <select class="sp__select" id="settingWaitTime">
+            <option value="5">5 perc</option>
+            <option value="10">10 perc</option>
+            <option value="15">15 perc</option>
+            <option value="20">20 perc</option>
+            <option value="25">25 perc</option>
+            <option value="30" selected>30 perc</option>
+            <option value="35">35 perc</option>
+            <option value="40">40 perc</option>
+            <option value="45">45 perc</option>
+            <option value="50">50 perc</option>
+            <option value="55">55 perc</option>
+            <option value="60">1 óra</option>
+          </select>
+          <small class="sp__hint">Ennyi idő után lesz piros a rendelés kártyán az adminban</small>
+        </div>
+
+        <!-- Kiszállítási idő -->
+        <div class="sp__group">
+          <p class="sp__label">Várható kiszállítási idő</p>
+          <select class="sp__select" id="settingDeliveryEta">
+            <option value="1 óra">1 óra</option>
+            <option value="1,5 óra">1,5 óra</option>
+            <option value="2 óra" selected>2 óra</option>
+            <option value="2,5 óra">2,5 óra</option>
+            <option value="3 óra">3 óra</option>
+          </select>
+          <small class="sp__hint">Ez jelenik meg a vendégnek sikeres rendelés után</small>
+        </div>
+
+        <!-- Személyes átvétel idő -->
+        <div class="sp__group">
+          <p class="sp__label">Várható személyes átvételi idő</p>
+          <select class="sp__select" id="settingPickupEta">
+            <option value="10–15">10–15 perc</option>
+            <option value="15–20">15–20 perc</option>
+            <option value="20–30" selected>20–30 perc</option>
+            <option value="30–45">30–45 perc</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="sp__footer">
+        <button class="sp__save-btn" id="settingsSave">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Mentés
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ADMIN TOAST ═══ -->
+  <div class="admin-toast" id="adminToast"></div>
+
+  <!-- ═══ VEZÉRLŐ SÁV ═══ -->
+  <div class="ctrl-bar">
+    <!-- Szűrő fülek -->
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all">Összes</button>
+      <button class="filter-tab" data-filter="pickup">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        Bejön
+      </button>
+      <button class="filter-tab" data-filter="delivery">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Házhozszállítás
+      </button>
+    </div>
+
+    <!-- Jobb oldali akciók -->
+    <div class="ctrl-bar__actions">
+      <button class="ctrl-btn ctrl-btn--danger" id="clearDeliveredBtn" title="Lezárt rendelések törlése">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Össztörlés
+      </button>
+      <button class="ctrl-btn ctrl-btn--close" id="toggleOrdersBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+        RENDELÉS ZÁRÁSA
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ IDŐ BEÁLLÍTÁSOK SÁV ═══ -->
+  <div class="time-bar">
+
+    <div class="time-bar__item">
+      <span class="time-bar__label">Bejövős idő</span>
+      <select class="time-bar__select" id="inlineWaitTime">
+        <option value="5">5 perc</option>
+        <option value="10">10 perc</option>
+        <option value="15">15 perc</option>
+        <option value="20">20 perc</option>
+        <option value="25">25 perc</option>
+        <option value="30" selected>30 perc</option>
+        <option value="35">35 perc</option>
+        <option value="40">40 perc</option>
+        <option value="45">45 perc</option>
+        <option value="50">50 perc</option>
+        <option value="55">55 perc</option>
+        <option value="60">1 óra</option>
+      </select>
+      <button class="time-bar__save" id="saveWaitTimeBtn">Mentés – 30 perc</button>
+    </div>
+
+    <div class="time-bar__sep"></div>
+
+    <div class="time-bar__item">
+      <span class="time-bar__label">Kiszállítás idő</span>
+      <select class="time-bar__select" id="inlineDeliveryTime">
+        <option value="1 óra">1 óra</option>
+        <option value="1,5 óra">1,5 óra</option>
+        <option value="2 óra" selected>2 óra</option>
+        <option value="2,5 óra">2,5 óra</option>
+        <option value="3 óra">3 óra</option>
+      </select>
+      <button class="time-bar__save" id="saveDeliveryTimeBtn">Mentés – 2 óra</button>
+    </div>
+
+  </div>
+
+  <!-- ═══ LEZÁRVA SÁV ═══ -->
+  <div class="orders-closed-banner" id="closedBanner">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+    RENDELÉS FELVÉTEL SZÜNETEL — az online rendelő értesítve
+  </div>
+
+  <!-- ═══ STATS SÁV ═══ -->
+  <div class="as">
+    <div class="as__item">
+      <span class="as__num" id="statTotal">0</span>
+      <span class="as__label">Mai összes</span>
+    </div>
+    <div class="as__sep"></div>
+    <div class="as__item">
+      <span class="as__num as__num--active" id="statActive">0</span>
+      <span class="as__label">Aktív</span>
+    </div>
+    <div class="as__sep"></div>
+    <div class="as__item">
+      <span class="as__num as__num--waiting" id="statWaiting">0</span>
+      <span class="as__label">Várakozik</span>
+    </div>
+    <div class="as__sep"></div>
+    <div class="as__item">
+      <span class="as__num as__num--done" id="statDone">0</span>
+      <span class="as__label">Befejezett</span>
+    </div>
+    <div class="as__sep"></div>
+    <div class="as__item">
+      <span class="as__num as__num--revenue" id="statRevenue">— Ft</span>
+      <span class="as__label">Mai bevétel</span>
+    </div>
+  </div>
+
+  <!-- ═══ KANBAN TÁBLA ═══ -->
+  <main class="ab">
+
+    <div class="ac ac--new">
+      <div class="ac__head">
+        <span class="ac__dot"></span>
+        <span class="ac__title">Új rendelések</span>
+        <span class="ac__badge" id="count-new">0</span>
+      </div>
+      <div class="ac__scroll-wrap">
+        <div class="ac__scroll-hint ac__scroll-hint--top" id="hint-top-new">↑ VAN MÉG FENT</div>
+        <div class="ac__body" id="cards-new"><p class="ac__empty">Nincs új rendelés</p></div>
+        <div class="ac__scroll-hint ac__scroll-hint--bot" id="hint-bot-new">↓ VAN MÉG LENT</div>
+      </div>
+    </div>
+
+    <div class="ac ac--preparing">
+      <div class="ac__head">
+        <span class="ac__dot"></span>
+        <span class="ac__title">Elkészítés alatt</span>
+        <span class="ac__badge" id="count-preparing">0</span>
+      </div>
+      <div class="ac__scroll-wrap">
+        <div class="ac__scroll-hint ac__scroll-hint--top" id="hint-top-preparing">↑ VAN MÉG FENT</div>
+        <div class="ac__body" id="cards-preparing"><p class="ac__empty">Nincs folyamatban lévő</p></div>
+        <div class="ac__scroll-hint ac__scroll-hint--bot" id="hint-bot-preparing">↓ VAN MÉG LENT</div>
+      </div>
+    </div>
+
+    <div class="ac ac--ready">
+      <div class="ac__head">
+        <span class="ac__dot"></span>
+        <span class="ac__title">Kész — Átvételre vár</span>
+        <span class="ac__badge" id="count-ready">0</span>
+      </div>
+      <div class="ac__scroll-wrap">
+        <div class="ac__scroll-hint ac__scroll-hint--top" id="hint-top-ready">↑ VAN MÉG FENT</div>
+        <div class="ac__body" id="cards-ready"><p class="ac__empty">Nincs kész rendelés</p></div>
+        <div class="ac__scroll-hint ac__scroll-hint--bot" id="hint-bot-ready">↓ VAN MÉG LENT</div>
+      </div>
+    </div>
+
+    <div class="ac ac--delivered">
+      <div class="ac__head">
+        <span class="ac__dot"></span>
+        <span class="ac__title">Átadva</span>
+        <span class="ac__badge" id="count-delivered">0</span>
+      </div>
+      <div class="ac__scroll-wrap">
+        <div class="ac__scroll-hint ac__scroll-hint--top" id="hint-top-delivered">↑ VAN MÉG FENT</div>
+        <div class="ac__body" id="cards-delivered"><p class="ac__empty">Nincs lezárt rendelés</p></div>
+        <div class="ac__scroll-hint ac__scroll-hint--bot" id="hint-bot-delivered">↓ VAN MÉG LENT</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ═══ BEÁLLÍTÁS KÉPERNYŐ (Firebase nincs konfigurálva) ═══ -->
+  <div class="setup-screen" id="setupScreen" style="display:none">
+    <div class="setup-card">
+      <img src="images/logo R.png" alt="Aramis" class="setup-logo" />
+      <h2>Firebase beállítás szükséges</h2>
+      <p>A konyhai kijelző valós idejű rendeléskezeléshez Firebase adatbázist használ.<br>Ez teljesen ingyenes — az alábbi lépések ~5 percet vesznek igénybe.</p>
+
+      <div class="setup-steps">
+        <div class="setup-step">
+          <span class="setup-step__num">1</span>
+          <div>
+            <strong>Látogasd meg:</strong><br>
+            <a href="https://console.firebase.google.com" target="_blank" rel="noopener">console.firebase.google.com</a>
+            → „Projekt hozzáadása" → adj nevet (pl. <em>aramis-rendeles</em>)
+          </div>
+        </div>
+        <div class="setup-step">
+          <span class="setup-step__num">2</span>
+          <div>
+            <strong>Bal menü → Build → Realtime Database → Adatbázis létrehozása</strong><br>
+            Helyszín: <code>europe-west1 (Belgium)</code> — tesztelési módban indítsd
+          </div>
+        </div>
+        <div class="setup-step">
+          <span class="setup-step__num">3</span>
+          <div>
+            <strong>Szabályok fülön</strong> cseréld le a tartalmat erre, majd kattints „Közzétesz"-re:<br>
+            <code>{ "rules": { ".read": true, ".write": true } }</code>
+          </div>
+        </div>
+        <div class="setup-step">
+          <span class="setup-step__num">4</span>
+          <div>
+            <strong>Projekt beállítások ⚙ → Webalkalmazás hozzáadása</strong> (&lt;/&gt;)<br>
+            Adj nevet, regisztrálj — megjelenik a <code>firebaseConfig</code> objektum
+          </div>
+        </div>
+        <div class="setup-step">
+          <span class="setup-step__num">5</span>
+          <div>
+            <strong>Nyisd meg a <code>firebase-config.js</code> fájlt</strong> és töltsd ki az értékeket<br>
+            az imént kapott config alapján, majd mentsd el — ennyi!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
