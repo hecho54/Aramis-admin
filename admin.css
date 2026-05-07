@@ -155,6 +155,9 @@ body {
 .ah__status-dot.connecting { background: var(--c-preparing); animation: pulse-dot 1s ease infinite; }
 
 /* Admin gomb */
+.ah__admin-btn, a.ah__admin-btn {
+  text-decoration: none;
+}
 .ah__admin-btn {
   display: flex;
   align-items: center;

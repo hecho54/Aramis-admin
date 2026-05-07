@@ -575,7 +575,7 @@ document.getElementById('modeBadge').addEventListener('click', async () => {
   showAdminToast(settings.mode === 'test' ? '🧪 Teszt módra váltva' : '🟢 Éles módra váltva');
 });
 
-document.getElementById('settingsToggle').addEventListener('click', openSettingsPanel);
+// Admin gomb most link → admin-config.html (nem kell eseménykezelő)
 document.getElementById('settingsClose').addEventListener('click', closeSettingsPanel);
 document.getElementById('settingsSave').addEventListener('click', saveSettings);
 document.getElementById('settingsOverlay').addEventListener('click', e => {
